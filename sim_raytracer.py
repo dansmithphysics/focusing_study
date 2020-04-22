@@ -4,13 +4,17 @@ import copy
 
 homo = False
 plot = False
+beamed = False
 
-nrays = 1000
+nrays = 10000
 
 # starting points and direction
 x0 = 0.0
-z0 = 80.0
-
+if(beamed):
+    z0 = 80.0
+else:
+    z0 = 0
+    
 norm_vec = np.array([0.0, 0.0, 1.0]) # Vector norm
 
 nsteps = 5000
@@ -119,13 +123,21 @@ for i, dir_0 in enumerate(dir_steps):
     last_points_x += [pos[0]]
     total_lengths += [total_length]
 
-if(homo):
-    np.save("data_defocus_homo_raytracer_xpos.npy", last_points_x)
-    np.save("data_defocus_homo_raytracer_length.npy", total_lengths)
+if(beamed):
+    if(homo):
+        np.save("data_focus_homo_beamed_raytracer_xpos.npy", last_points_x)
+        np.save("data_focus_homo_beamed_raytracer_length.npy", total_lengths)
+    else:
+        np.save("data_focus_inhomo_beamed_raytracer_xpos.npy", last_points_x)
+        np.save("data_focus_inhomo_beamed_raytracer_length.npy", total_lengths)
 else:
-    np.save("data_defocus_inhomo_raytracer_xpos.npy", last_points_x)
-    np.save("data_defocus_inhomo_raytracer_length.npy", total_lengths)
-        
+    if(homo):
+        np.save("data_focus_homo_raytracer_xpos.npy", last_points_x)
+        np.save("data_focus_homo_raytracer_length.npy", total_lengths)
+    else:
+        np.save("data_focus_inhomo_raytracer_xpos.npy", last_points_x)
+        np.save("data_focus_inhomo_raytracer_length.npy", total_lengths)
+
 if(plot):
     plt.grid(True)
 

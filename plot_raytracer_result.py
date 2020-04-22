@@ -6,11 +6,6 @@ from scipy.misc import derivative
 
 beamed_result = False
 
-def power_from_angle(angle):
-    angle = np.abs(np.rad2deg(angle)+90.0)
-    sigma = 14.0
-    return np.exp(-0.5 * np.power(angle / sigma, 2.0))
-
 def unbined_signal_to_power(raw_signal):
 
     running_sum = np.arange(len(raw_signal))
@@ -24,8 +19,8 @@ def unbined_signal_to_power(raw_signal):
 
     return new_raw_signal_p
 
-homo_xpos   = np.load("data_defocus_homo_raytracer_xpos.npy")
-inhomo_xpos = np.load("data_defocus_inhomo_raytracer_xpos.npy")
+homo_xpos   = np.load("data_focus_homo_raytracer_xpos.npy")
+inhomo_xpos = np.load("data_focus_inhomo_raytracer_xpos.npy")
 
 ub_inhomo_xpos = unbined_signal_to_power(inhomo_xpos)
 ub_homo_xpos   = unbined_signal_to_power(homo_xpos)
