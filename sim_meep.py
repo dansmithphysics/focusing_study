@@ -18,7 +18,7 @@ save_files = True
 homo = True
 file_base = "./"
 
-resolution = 4
+resolution = 10
 end_time = 4000
 sx = 800  # 800 m, size of cell in X direction
 sy = 1000 # 1 km, size of cell in Y direction
@@ -87,8 +87,7 @@ def f_source(t):
 sources = [mp.Source(mp.CustomSource(src_func = f_source, start_time=0, end_time = 40),
                      component=mp.Ez,
                      center=mp.Vector3(0.0, -sy/2.0 + pml_thicc, 0.0),
-                     size=mp.Vector3(sx - 2.0 * pml_thicc, 0, 0), 
-                     amp_func=gaussian_beam(sigma, src_pt))]
+                     size=mp.Vector3(0, 0, 0))]
 
 
 geometry = []                

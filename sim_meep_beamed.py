@@ -14,15 +14,15 @@ import sys, os
 seed = 31456
 np.random.seed(seed+1)
 
-beamed_profile = False
-homo = True
+beamed_profile = True
+homo = False
 save_files = True
 file_base = "./"
 
-resolution = 2
+resolution = 10
 end_time = 4000 
 sx = 800  # 800 m, size of cell in X direction
-sy = 1000 # 1 km, size of cell in Y direction
+sy = 1040 # 1 km, size of cell in Y direction
 
 cell = mp.Vector3(sx,sy,0)
 size = mp.Vector3(0,0.0)
@@ -73,25 +73,25 @@ if(beamed_profile):
 else:
 
     for i, jjj in enumerate(np.linspace(- sx / 2.0 + pml_thicc + 10.0, 0.0, 40)):
-        center_slice_list += [mp.Vector3(jjj, -sy/2.0 + pml_thicc, 0.0)] # Top 
+        center_slice_list += [mp.Vector3(jjj, -sy/2.0 + 5.0 * pml_thicc, 0.0)] # Top 
         if(homo):
             start_times += [0.0]
         else:
             start_times += [0.0]
             
     for i, jjj in enumerate(np.linspace(- sx / 2.0 + pml_thicc + 10.0, 0.0, 40)):    
-        center_slice_list += [mp.Vector3(jjj, -sy/2.0 + pml_thicc, 0.0)] # Top, returned
+        center_slice_list += [mp.Vector3(jjj, -sy/2.0 + 5.0 * pml_thicc, 0.0)] # Top, returned
         if(homo):
-            start_times += [2700 - 250.0]
+            start_times += [2600 - 250.0]
         else:
             start_times += [3300 - 250.0]
 
     for i, jjj in enumerate(np.linspace(- sx / 2.0 + pml_thicc + 10.0, 0.0, 40)):    
         center_slice_list += [mp.Vector3(jjj, sy/2.0 - 4.0 * pml_thicc, 0.0)] # Bottom
         if(homo):
-            start_times += [1100.0]
+            start_times += [1200.0]
         else:
-            start_times += [1400.0]
+            start_times += [1500.0]
     
 sigma = 5.0 # Beam width
 src_pt = mp.Vector3(0.0, -sy/2.0 + 2.0 * pml_thicc, 0.0)
@@ -112,12 +112,11 @@ sources = [mp.Source(mp.CustomSource(src_func = f_source, start_time=0, end_time
                      size=mp.Vector3(sx - 2.0 * pml_thicc, 0, 0), 
                      amp_func=gaussian_beam(sigma, src_pt))]
 
-
 geometry = []                
 block_size = size_objects
 
 for y_ in range(0, 1000, 1): 
-    center = mp.Vector3(0, y_ - sy / 2.0 + pml_thicc, 0)
+    center = mp.Vector3(0, y_ - sy / 2.0 + 5.0 * pml_thicc, 0)
 
     # Now, find a depth, and set index of refraction from that
     if(homo):
@@ -128,9 +127,10 @@ for y_ in range(0, 1000, 1):
     geometry.append(mp.Block(center=center,
                              size=mp.Vector3(sx, 1.0, 0),
                              material=mp.Medium(index=index)))    
+
 # Cut down reflections at the tippy top by replacing air with top-of-fern / loose snow index ice
-geometry.append(mp.Block(center=mp.Vector3(0.0, -sy / 2.0 + pml_thicc / 2.0, 0.0), 
-                         size=mp.Vector3(sx, pml_thicc, 0),
+geometry.append(mp.Block(center=mp.Vector3(0.0, -sy / 2.0 + 2.5 * pml_thicc / 2.0, 0.0), 
+                         size=mp.Vector3(sx, 5.0 * pml_thicc, 0),
                          material=mp.Medium(index=1.35915)))
 
 # Perfect bottom, lol
